@@ -19,7 +19,7 @@ const Container = styled.div`
     gap: 24px;
     color: rgba(255, 255, 255, 0.8);
     padding: 20px;
-
+    position: relative;
     box-sizing: border-box;
 
     @media screen and (max-width: 480px) {
@@ -38,6 +38,12 @@ const Container = styled.div`
         gap: 8px;
     }
 
+    & > .row {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+    }
+
     input,
     select {
         min-height: 32px;
@@ -53,18 +59,38 @@ const Container = styled.div`
         height: 48px;
         width: 100%;
         border-radius: 8px;
-        background-color: rgba(255, 255, 255, 0.8);
+        background-color: rgba(255, 255, 255, 0.1);
         border: none;
         font-size: 16px;
-        font-weight: bold;
+        font-weight: 500;
         transition: all 250ms;
+        color: white;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 4px;
 
         :hover {
-            background-color: rgba(255, 255, 255, 0.7);
+            background-color: rgba(255, 255, 255, 0.15);
         }
 
         :active {
-            background-color: rgba(255, 255, 255, 0.6);
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        &.chip {
+            border-radius: 36px;
+            position: fixed;
+            left: 20px;
+            top: 20px;
+            width: auto;
+            height: auto;
+            background-color: #fae3e3;
+            box-shadow: 0 4px 24px #ff4040bb;
+            color: #bf2828;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 10px 16px;
         }
     }
 `;

@@ -1,6 +1,7 @@
 import Page from "components/Page";
 import useControlSocket from "hooks/useControlSocket";
 import React, { useEffect, useState } from "react";
+import { HiBellAlert } from "react-icons/hi2";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import { io } from "socket.io-client";
@@ -106,8 +107,18 @@ function ControlPage() {
         // }
     };
 
+    const handleHelp = () => {
+        // if (confirm("다음 방으로 넘어갈까요?")) {
+        help();
+        // }
+    };
+
     return (
         <Page>
+            <button onClick={handleHelp} className="chip">
+                <HiBellAlert size={20} />
+                도움 요청
+            </button>
             <img src={props.image} />
             <div>{props.title}</div>
             <div>{props.description}</div>

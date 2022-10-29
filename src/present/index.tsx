@@ -23,7 +23,7 @@ function FullScreenPresent({ file, state, videoMode, contentMode }: FullScreenPr
                 videoRef.current?.pause();
             }
         }
-    }, [state]);
+    }, [state, videoMode]);
 
     const transitions = useTransition(!state, {
         from: { opacity: 0 },
