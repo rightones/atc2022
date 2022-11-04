@@ -37,7 +37,16 @@ const room = ["solid", "liquid", "gas", "super"];
 
 app.use(cors());
 
-const httpServer = require("http").createServer(app);
+const fs = require("fs");
+
+const options = {
+    key: fs.readFileSync("./.cert/cert.key"),
+    cert: fs.readFileSync("./.cert/cert.crt"),
+    requestCert: false,
+    rejectUnauthorized: false,
+};
+
+const httpServer = require("https").createServer(options, app);
 const { Server } = require("socket.io");
 const qrcode = require("qrcode-terminal");
 

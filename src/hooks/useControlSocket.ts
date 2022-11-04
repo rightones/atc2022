@@ -5,7 +5,13 @@ const useControlSocket = () => {
     const [connectionState, setConnectionState] = useState(false);
     const [url, setUrl] = useState("");
 
-    const socket = useMemo(() => io(url), [url]);
+    const socket = useMemo(
+        () =>
+            io(url, {
+                rejectUnauthorized: true,
+            }),
+        [url],
+    );
 
     useEffect(() => {
         socket.on("connect", () => {

@@ -112,7 +112,13 @@ function ControlPage() {
 
     const [fullscreen, setFullscreen] = useState(false);
 
-    const socket = useMemo(() => io(url), [url]);
+    const socket = useMemo(
+        () =>
+            io(url, {
+                rejectUnauthorized: true,
+            }),
+        [url],
+    );
 
     const videoRef = useRef<HTMLVideoElement>(null);
     const ref = useRef<HTMLDivElement>(null);
