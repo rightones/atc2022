@@ -5,13 +5,13 @@ import { io } from "socket.io-client";
 import fscreen from "fscreen";
 
 interface FullScreenPresentProps {
-    file?: File | null;
+    src?: string;
     state: boolean;
     videoMode?: "normal" | "loop";
     contentMode: "video" | "p5js";
 }
 
-function FullScreenPresent({ file, state, videoMode, contentMode }: FullScreenPresentProps) {
+function FullScreenPresent({ src, state, videoMode, contentMode }: FullScreenPresentProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
@@ -33,7 +33,7 @@ function FullScreenPresent({ file, state, videoMode, contentMode }: FullScreenPr
         config: config.molasses,
     });
 
-    if (contentMode === "video" && !file) return null;
+    if (contentMode === "video" && !src) return null;
 
     return (
         <div
@@ -70,8 +70,8 @@ allow="camera; microphone"
                     }}
                 />
             ) : (
-                <video ref={videoRef} autoPlay loop>
-                    {file && <source src={URL.createObjectURL(file)} />}
+                <video ref={videoRef} autoPlay={videoMode === "loop"} loop={videoMode === "loop"}>
+                    {src && <source src={src} />}
                 </video>
             )}
             {transitions(
@@ -107,7 +107,7 @@ function ControlPage() {
     const [room, setRoom] = useState("solid");
     const [state, setState] = useState(false);
     const [contentMode, setContentMode] = useState<"video" | "p5js">("video");
-    const [videoFile, setVideoFile] = useState<File | null>();
+    const [videoSrc, setVideoSrc] = useState<string | undefined>();
     const [videoMode, setVideoMode] = useState<"normal" | "loop">("loop");
 
     const [fullscreen, setFullscreen] = useState(false);
@@ -165,7 +165,7 @@ function ControlPage() {
     return (
         <div ref={ref}>
             {fullscreen ? (
-                <FullScreenPresent state={state} file={videoFile} videoMode={videoMode} contentMode={contentMode} />
+                <FullScreenPresent state={state} src={videoSrc} videoMode={videoMode} contentMode={contentMode} />
             ) : (
                 <Page>
                     <div>
@@ -214,12 +214,22 @@ function ControlPage() {
                                 <input
                                     type="file"
                                     id="fileUpload"
-                                    onChange={(e) => setVideoFile(e.target.files?.[0])}
+                                    onChange={(e) =>
+                                        e.target.files?.[0] && setVideoSrc(URL.createObjectURL(e.target.files?.[0]))
+                                    }
                                 />
                             </div>
-                            {videoFile && (
+                            <div>
+                                <h3>영상 선택</h3>
+                                <select onChange={(e) => setVideoSrc(e.target.value)}>
+                                    <option value="/solid.mp4">고체</option>
+                                    <option value="/liquid.mp4">액체</option>
+                                    <option value="/super.mp4">초임계유체</option>
+                                </select>
+                            </div>
+                            {videoSrc && (
                                 <video width="400" controls ref={videoRef}>
-                                    <source src={URL.createObjectURL(videoFile)} />
+                                    <source src={videoSrc} />
                                 </video>
                             )}
                             <div>
@@ -235,7 +245,7 @@ function ControlPage() {
                         <button
                             onClick={() => {
                                 if (ref.current) {
-                                    if (videoFile || contentMode === "p5js") fscreen.requestFullscreen(ref.current);
+                                    if (videoSrc || contentMode === "p5js") fscreen.requestFullscreen(ref.current);
                                     else alert("영상을 선택해주세요.");
                                 }
                             }}

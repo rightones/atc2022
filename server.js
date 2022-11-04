@@ -104,7 +104,7 @@ io.on("connection", (socket) => {
 
 httpServer.listen(4000);
 
-qrcode.generate(`http://${ip.address()}/control?room=solid&url=${ip.address()}:4000`, { small: true });
+qrcode.generate(`https://atc2022-ignis.vercel.app/control?room=solid&url=${ip.address()}:4000`, { small: true });
 
 require("console-stamp")(console, { format: ":date(HH:MM:ss.l)" });
 
@@ -128,7 +128,7 @@ process.stdin.on("keypress", (str, key) => {
     }
     if (str === "q") {
         qrcode.generate(
-            `http://${ip.address()}/control?room=solid&url=${ip.address()}:4000`,
+            `https://atc2022-ignis.vercel.app/control?room=solid&url=${ip.address()}:4000`,
             { small: true },
             (qrcode) => {
                 console.log(`\n${qrcode}`);
