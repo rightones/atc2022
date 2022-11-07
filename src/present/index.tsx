@@ -107,8 +107,8 @@ function ControlPage() {
     const [room, setRoom] = useState("solid");
     const [state, setState] = useState(false);
     const [contentMode, setContentMode] = useState<"video" | "p5js">("video");
-    const [videoSrc, setVideoSrc] = useState<string | undefined>();
-    const [videoMode, setVideoMode] = useState<"normal" | "loop">("loop");
+    const [videoSrc, setVideoSrc] = useState<string | undefined>("/solid.mp4");
+    const [videoMode, setVideoMode] = useState<"normal" | "loop">("normal");
 
     const [fullscreen, setFullscreen] = useState(false);
 
@@ -167,6 +167,33 @@ function ControlPage() {
     }, [room]);
 
     const [urlInput, setUrlInput] = useState("localhost:4000");
+    const [isPreset, setIsPreset] = useState(true);
+
+    const handleSolidPreset = () => {
+        setRoom("solid");
+        setContentMode("video");
+        setVideoSrc("/solid.mp4");
+        setVideoMode("normal");
+    };
+
+    const handleLiquidPreset = () => {
+        setRoom("liquid");
+        setContentMode("video");
+        setVideoSrc("/liquid.mp4");
+        setVideoMode("normal");
+    };
+
+    const handleGasPreset = () => {
+        setRoom("gas");
+        setContentMode("p5js");
+    };
+
+    const handleSuperPreset = () => {
+        setRoom("super");
+        setContentMode("video");
+        setVideoSrc("/super.mp4");
+        setVideoMode("normal");
+    };
 
     return (
         <div ref={ref}>
@@ -180,7 +207,7 @@ function ControlPage() {
                     </div>
                     <div>
                         <h3>프로젝터 이름</h3>
-                        <select onChange={(e) => setRoom(e.target.value)}>
+                        <select value={room} onChange={(e) => setRoom(e.target.value)}>
                             <option value="solid">고체</option>
                             <option value="liquid">액체</option>
                             <option value="gas">기체</option>
@@ -192,12 +219,15 @@ function ControlPage() {
                         <h3>서버 연결 상태</h3>
                         {String(connectionState)}
                     </div>
+                    {/*
                     <div>
                         <h3>연결 ID</h3>
                         {socketId}
                     </div>
+                    */}
                     <div>
                         <button
+                            className="highlight"
                             onClick={() => {
                                 if (connectionState) setUrl("");
                                 else setUrl(urlInput);
@@ -206,49 +236,92 @@ function ControlPage() {
                             {connectionState ? "연결 해제" : "연결"}
                         </button>
                     </div>
+
                     <div>
-                        <h3>콘텐츠</h3>
-                        <select onChange={(e) => setContentMode(e.target.value as "video" | "p5js")}>
-                            <option value="video">영상</option>
-                            <option value="p5js">P5.js</option>
+                        <h3>프리셋</h3>
+                        <select
+                            onChange={(e) => {
+                                setIsPreset(e.target.value !== "custom");
+                                switch (e.target.value) {
+                                    case "solid":
+                                        handleSolidPreset();
+                                        break;
+                                    case "liquid":
+                                        handleLiquidPreset();
+                                        break;
+                                    case "gas":
+                                        handleGasPreset();
+                                        break;
+                                    case "super":
+                                        handleSuperPreset();
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }}
+                        >
+                            <option value="solid">고체</option>
+                            <option value="liquid">액체</option>
+                            <option value="gas">기체</option>
+                            <option value="super">초임계유체</option>
+                            <option value="custom">사용자 설정</option>
                         </select>
                     </div>
-                    {contentMode === "video" && (
+                    {!isPreset && (
                         <>
                             <div>
-                                <h3>영상 선택</h3>
-                                <input
-                                    type="file"
-                                    id="fileUpload"
-                                    onChange={(e) =>
-                                        e.target.files?.[0] && setVideoSrc(URL.createObjectURL(e.target.files?.[0]))
-                                    }
-                                />
-                            </div>
-                            <div>
-                                <h3>영상 선택</h3>
-                                <select onChange={(e) => setVideoSrc(e.target.value)}>
-                                    <option value="/solid.mp4">고체</option>
-                                    <option value="/liquid.mp4">액체</option>
-                                    <option value="/super.mp4">초임계유체</option>
+                                <h3>콘텐츠</h3>
+                                <select
+                                    value={contentMode}
+                                    onChange={(e) => setContentMode(e.target.value as "video" | "p5js")}
+                                >
+                                    <option value="video">영상</option>
+                                    <option value="p5js">P5.js</option>
                                 </select>
                             </div>
-                            {videoSrc && (
-                                <video width="400" controls ref={videoRef}>
-                                    <source src={videoSrc} />
-                                </video>
+                            {contentMode === "video" && (
+                                <>
+                                    <div>
+                                        <h3>영상 선택</h3>
+                                        <input
+                                            type="file"
+                                            id="fileUpload"
+                                            onChange={(e) =>
+                                                e.target.files?.[0] &&
+                                                setVideoSrc(URL.createObjectURL(e.target.files?.[0]))
+                                            }
+                                        />
+                                    </div>
+                                    <div>
+                                        <h3>영상 선택</h3>
+                                        <select value={videoSrc} onChange={(e) => setVideoSrc(e.target.value)}>
+                                            <option value="/solid.mp4">고체</option>
+                                            <option value="/liquid.mp4">액체</option>
+                                            <option value="/super.mp4">초임계유체</option>
+                                        </select>
+                                    </div>
+                                    {videoSrc && (
+                                        <video width="400" controls ref={videoRef} key={videoSrc}>
+                                            <source src={videoSrc} />
+                                        </video>
+                                    )}
+                                    <div>
+                                        <h3>영상 모드</h3>
+                                        <select
+                                            value={videoMode}
+                                            onChange={(e) => setVideoMode(e.target.value as "normal" | "loop")}
+                                        >
+                                            <option value="normal">기본</option>
+                                            <option value="loop">루프</option>
+                                        </select>
+                                    </div>
+                                </>
                             )}
-                            <div>
-                                <h3>영상 모드</h3>
-                                <select onChange={(e) => setVideoMode(e.target.value as "normal" | "loop")}>
-                                    <option value="loop">루프</option>
-                                    <option value="normal">기본</option>
-                                </select>
-                            </div>
                         </>
                     )}
                     <div>
                         <button
+                            className="highlight"
                             onClick={() => {
                                 if (ref.current) {
                                     if (videoSrc || contentMode === "p5js") fscreen.requestFullscreen(ref.current);

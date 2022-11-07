@@ -5,9 +5,12 @@ const Main = () => {
     const navigate = useNavigate();
     return (
         <Page>
-            <img src="/poster.png" alt="Poster of X(P, P)" style={{ width: "100%" }} />
-            <button type="button" onClick={() => navigate("/present")}>
+            <img src="/poster.png" alt="Poster of X(P, P)" />
+            <button type="button" className="highlight" onClick={() => alert("준비 중입니다!")}>
                 작품 설명
+            </button>
+            <button type="button" className="highlight" onClick={() => alert("준비 중입니다!")}>
+                상평형도 테스트
             </button>
             <div className="row">
                 <button type="button" onClick={() => navigate("/present")}>

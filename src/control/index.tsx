@@ -1,7 +1,15 @@
 import Page from "components/Page";
 import useControlSocket from "hooks/useControlSocket";
 import React, { useEffect, useRef, useState } from "react";
-import { HiBellAlert, HiPlay, HiStop } from "react-icons/hi2";
+import {
+    HiBackward,
+    HiBellAlert,
+    HiChevronLeft,
+    HiChevronRight,
+    HiDocumentText,
+    HiPlay,
+    HiStop,
+} from "react-icons/hi2";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import { io } from "socket.io-client";
@@ -67,15 +75,17 @@ function ControlPage() {
 
     useEffect(() => {
         (async () => {
-            try {
-                const ndef = new NDEFReader();
-                await ndef.scan();
-                console.log("> Scan started");
-                ndef.addEventListener("reading", ({ message, serialNumber }: any): void => {
-                    alert(`> Serial Number: ${serialNumber}`);
-                });
-            } catch (error) {
-                alert(`Argh! ${error}`);
+            if (typeof NDEFReader !== "undefined") {
+                try {
+                    const ndef = new NDEFReader();
+                    await ndef.scan();
+                    console.log("> Scan started");
+                    ndef.addEventListener("reading", ({ message, serialNumber }: any): void => {
+                        alert(`> Serial Number: ${serialNumber}`);
+                    });
+                } catch (error) {
+                    alert(`Argh! ${error}`);
+                }
             }
         })();
     }, []);
@@ -105,6 +115,7 @@ function ControlPage() {
                 </div>
                 <div>
                     <button
+                        className="highlight"
                         onClick={() => {
                             if (connectionState) setUrl("");
                             else setUrl(urlInput);
@@ -144,21 +155,42 @@ function ControlPage() {
 
     return (
         <Page>
-            <button onClick={handleHelp} className="chip">
-                <HiBellAlert size={20} />
-                도움 요청
-            </button>
+            <div className="row">
+                <button onClick={() => navigate(-1)} className="circle">
+                    <HiChevronLeft size={28} />
+                </button>
+                <div style={{ flexGrow: 1 }} />
+                <button onClick={handleHelp} className="chip">
+                    <HiBellAlert size={20} />
+                    도움 요청
+                </button>
+            </div>
             <img src={props.image} />
-            <div>{props.title}</div>
+            <h1>{props.title}</h1>
             <div>{props.description}</div>
-            <button onClick={handlePlay}>
-                <HiPlay />
-            </button>
-            <button onClick={handleStop}>
-                <HiStop />
-            </button>
+            <div className="row">
+                <div className="box row">
+                    <button onClick={handlePlay} className="circle">
+                        <HiPlay size={28} />
+                    </button>
+                    <button onClick={handleStop} className="circle">
+                        <HiStop size={28} />
+                    </button>
+                    <button onClick={handleStop} className="circle">
+                        <HiBackward size={28} />
+                    </button>
+                </div>
+                <button onClick={handleNext} style={{ alignSelf: "stretch", height: "auto" }}>
+                    스크립트
+                    <HiChevronRight />
+                </button>
+            </div>
             <audio controls src={props.audio} autoPlay key={room} hidden ref={audioRef} />
-            {props.next && props.nextTitle && <button onClick={handleNext}>다음 방: {props.nextTitle}</button>}
+            {props.next && props.nextTitle && (
+                <button className="highlight" onClick={handleNext}>
+                    다음 방: {props.nextTitle}
+                </button>
+            )}
         </Page>
     );
 }
