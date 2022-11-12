@@ -58,7 +58,7 @@ const io = new Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
-    // ...
+    /*
     socket.on("join", (data) => {
         if (!room.includes(data)) {
             console.log(
@@ -85,14 +85,15 @@ io.on("connection", (socket) => {
     socket.on("message", (data) => {
         io.emit(data);
     });
+     */
 
     socket.on("on", (data) => {
-        io.sockets.to(data).emit("message", "on");
+        io.sockets.emit("on", data);
         console.log(`${FgGreen} ON    ${Reset}${BgCyan}${FgBlack}[앱]${Reset} ${data}에 연결된 프로젝터를 켰습니다.`);
     });
 
     socket.on("off", (data) => {
-        io.sockets.to(data).emit("message", "off");
+        io.sockets.emit("off", data);
         console.log(`${FgBlue} OFF   ${Reset}${BgCyan}${FgBlack}[앱]${Reset} ${data}에 연결된 프로젝터를 껐습니다.`);
     });
 
@@ -100,6 +101,7 @@ io.on("connection", (socket) => {
         console.log(`${FgRed} HELP  ${Reset}${BgCyan}${FgBlack}[앱]${Reset} 앱에서 도움 요청이 왔습니다.`);
     });
 
+    /*
     socket.on("disconnecting", async () => {
         const rooms = Array.from(socket.rooms).filter((element) => room.includes(element));
         if (rooms.length > 0)
@@ -109,6 +111,7 @@ io.on("connection", (socket) => {
                 )}에 연결된 프로젝터의 연결이 끊겼습니다. ${socket.id}`,
             );
     });
+     */
 });
 
 httpServer.listen(4000);
@@ -122,6 +125,7 @@ console.log(
 );
 
 process.stdin.on("keypress", (str, key) => {
+    /*
     if (str === "l") {
         console.log("");
         console.log(`${BgYellow + FgBlack} 연결된 프로젝터 상태 ${Reset}`);
@@ -135,6 +139,8 @@ process.stdin.on("keypress", (str, key) => {
         });
         console.log("");
     }
+
+     */
     if (str === "q") {
         qrcode.generate(
             `https://atc2022-ignis.vercel.app/control?room=solid&url=${ip.address()}:4000`,

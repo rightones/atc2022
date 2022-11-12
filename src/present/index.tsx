@@ -102,7 +102,6 @@ allow="camera; microphone"
 
 function ControlPage() {
     const [connectionState, setConnectionState] = useState(false);
-    const [socketId, setSocketId] = useState("");
     const [url, setUrl] = useState("");
     const [room, setRoom] = useState("solid");
     const [state, setState] = useState(false);
@@ -139,32 +138,26 @@ function ControlPage() {
     useEffect(() => {
         socket.on("connect", () => {
             setConnectionState(true);
-            socket.emit("join", room);
-            setSocketId(socket.id);
         });
 
         socket.on("disconnect", () => {
             setConnectionState(false);
         });
 
-        socket.on("message", (message) => {
-            if (message === "on") {
+        socket.on("on", (message) => {
+            if (message === room) {
                 setState(true);
                 videoRef.current?.play();
-            } else {
+            }
+        });
+
+        socket.on("message", (message) => {
+            if (message === room) {
                 setState(false);
                 videoRef.current?.pause();
             }
         });
     }, [socket]);
-
-    useEffect(() => {
-        if (connectionState) {
-            setState(false);
-            socket.emit("leave");
-            socket.emit("join", room);
-        }
-    }, [room]);
 
     const [urlInput, setUrlInput] = useState("localhost:4000");
     const [isPreset, setIsPreset] = useState(true);

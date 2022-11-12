@@ -35,7 +35,7 @@
   },
   "scripts": {
     "server": "node server.js",
-    "start": "SSL_CRT_FILE=./.cert/cert.crt SSL_KEY_FILE=./.cert/cert.key HTTPS=true PORT=443 ESLINT_NO_DEV_ERRORS='true' react-scripts start",
+    "start": "sudo SSL_CRT_FILE=./.cert/cert.crt SSL_KEY_FILE=./.cert/cert.key HTTPS=true PORT=443 ESLINT_NO_DEV_ERRORS='true' react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

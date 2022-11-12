@@ -1,6 +1,6 @@
 import Page from "components/Page";
 import useControlSocket from "hooks/useControlSocket";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
     HiBackward,
     HiBellAlert,
@@ -71,9 +71,11 @@ function ControlPage() {
     const { on, off, help, setUrl, connectionState } = useControlSocket();
     const audioRef = useRef<HTMLAudioElement>(null);
 
+    const [urlInput, setUrlInput] = useState("localhost:4000");
+
     let room = searchParams.get("room");
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         (async () => {
             if (typeof NDEFReader !== "undefined") {
                 try {
@@ -88,6 +90,11 @@ function ControlPage() {
                 }
             }
         })();
+        const server = localStorage.getItem("server");
+        if (server) {
+            setUrl(server);
+            setUrlInput(server);
+        }
     }, []);
 
     useEffect(() => {
@@ -97,8 +104,6 @@ function ControlPage() {
             on(room || "solid");
         }
     }, [searchParams, connectionState]);
-
-    const [urlInput, setUrlInput] = useState("localhost:4000");
 
     useEffect(() => {
         if (searchParams.get("url")) {
@@ -118,7 +123,10 @@ function ControlPage() {
                         className="highlight"
                         onClick={() => {
                             if (connectionState) setUrl("");
-                            else setUrl(urlInput);
+                            else {
+                                localStorage.setItem("server", urlInput);
+                                setUrl(urlInput);
+                            }
                         }}
                     >
                         {connectionState ? "연결 해제" : "연결"}
