@@ -9,7 +9,8 @@
     "react-app",
     "airbnb",
     "airbnb/hooks",
-    "prettier"
+    "prettier",
+    "p5js"
   ],
   "settings": {
     "react": {

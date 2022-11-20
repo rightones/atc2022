@@ -56,7 +56,9 @@ function FullScreenPresent({ src, state, videoMode, contentMode }: FullScreenPre
                                     srcdoc='<!DOCTYPE html>
 <html lang="en">
   <head>
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.5.0/lib/p5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.5.0/lib/p5.min.js"/>
+    <script src="https://unpkg.com/handsfree@8.5.1/build/lib/handsfree.js"/>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/handsfree@8.1.1/build/lib/assets/handsfree.css"/>
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8" />
 

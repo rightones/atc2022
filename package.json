@@ -35,7 +35,7 @@
   },
   "scripts": {
     "server": "node server.js",
-    "start": "sudo SSL_CRT_FILE=./.cert/cert.crt SSL_KEY_FILE=./.cert/cert.key HTTPS=true PORT=443 ESLINT_NO_DEV_ERRORS='true' react-scripts start",
+    "start": "sudo SSL_CRT_FILE=./.cert/cert.pem SSL_KEY_FILE=./.cert/key.pem HTTPS=true PORT=443 ESLINT_NO_DEV_ERRORS='true' react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -65,6 +65,7 @@
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "eslint": "^8.25.0",
     "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-p5js": "^1.1.0",
     "eslint-config-prettier": "^8.5.0",
     "prettier": "^2.7.1",
     "ts-node": "^10.9.1",

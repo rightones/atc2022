@@ -6,10 +6,11 @@ const Main = () => {
     return (
         <Page>
             <img src="/poster.png" alt="Poster of X(P, P)" />
+            <div style={{ flexGrow: 1 }} />
             <button type="button" className="highlight" onClick={() => alert("준비 중입니다!")}>
                 작품 설명
             </button>
-            <button type="button" className="highlight" onClick={() => alert("준비 중입니다!")}>
+            <button type="button" className="highlight" onClick={() => navigate("/test?result=true")}>
                 상평형도 테스트
             </button>
             <div className="row">

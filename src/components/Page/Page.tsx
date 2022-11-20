@@ -14,6 +14,7 @@ const Wrapper = styled.div`
 const Container = styled.div`
     width: 100%;
     max-width: 480px;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -122,6 +123,10 @@ const Container = styled.div`
         &.highlight {
             background-color: #aadad5;
             color: #000;
+        }
+        :disabled {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.3);
         }
     }
 `;

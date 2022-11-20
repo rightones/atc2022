@@ -4558,6 +4558,11 @@ eslint-config-airbnb@^19.0.4:
     object.assign "^4.1.2"
     object.entries "^1.1.5"
 
+eslint-config-p5js@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-p5js/-/eslint-config-p5js-1.1.0.tgz#7596f9cccbe008a24670b1e725328229e65dd29d"
+  integrity sha512-JBa5dAa3R4tpHhf27G2wznnlFR+bjJaN11hxQ/qUk1nVYjWtyQuT7hAIZuNUTmx1WiFcv6eUuw7oXhc44Nw9dg==
+
 eslint-config-prettier@^8.5.0:
   version "8.5.0"
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.5.0.tgz#5a81680ec934beca02c7b1a61cf8ca34b66feab1"

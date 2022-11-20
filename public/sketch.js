@@ -1,97 +1,77 @@
-let buffer;
-const spots = [];
-const count = 120;
+let handsfree;
+const particles = [];
+let lines = [];
 
 function setup() {
-    const canvas = createCanvas(windowWidth, windowHeight, WEBGL);
-    colorMode(HSB);
-    ellipseMode(CENTER);
-    angleMode(RADIANS);
-    frameRate(20);
-    buffer = new VideoBuffer(width / 4, height / 4);
-    for (let i = 0; i < 6000; i++) {
-        spots.push(new Spot(canvas, buffer));
-    }
-}
-
-function draw() {
-    translate(-width / 2, -height / 2);
-    buffer.update();
-    background("#000033");
-    if (frameCount > 10) {
-        for (spot of spots) {
-            spot.update();
-            spot.show();
+    createCanvas(1280, 800);
+    handsfree = new Handsfree({
+        showDebug: false,
+        hands: true,
+        maxNumHands: 2,
+    });
+    handsfree.start();
+    for (let x = 0; x < width - 0; x += 20) {
+        for (let y = 0; y < height - 0; y += 20) {
+            particles.push(new Particle(x, y, color(0)));
         }
     }
 }
 
-class Spot {
-    constructor(canvas, buffer) {
-        this.buffer = buffer;
-        this.x = random(canvas.width);
-        this.y = random(canvas.height);
-        this.xBuffer = int((this.x / canvas.width) * buffer.width);
-        this.yBuffer = int((this.y / canvas.height) * buffer.height);
+const px = (x) => map(x, 0, 1, width, 0);
+const py = (y) => map(y, 0, 1, 0, height);
 
-        this.hue = random(10, 200);
-        this.saturation = random(5, 25);
-        this.brightness = 120;
-        this.alpha = 5;
-        this.maxRadius = random(3, 14);
-        this.radius = 5;
-    }
+function update() {
+    lines = [].concat(
+        ...(handsfree.data.hands?.multiHandLandmarks?.map((hand) => {
+            return [
+                [px(hand[0].x), py(hand[0].y), px(hand[4].x), py(hand[4].y)],
+                [px(hand[0].x), py(hand[0].y), px(hand[8].x), py(hand[8].y)],
+                [px(hand[0].x), py(hand[0].y), px(hand[12].x), py(hand[12].y)],
+                [px(hand[0].x), py(hand[0].y), px(hand[16].x), py(hand[16].y)],
+                [px(hand[0].x), py(hand[0].y), px(hand[20].x), py(hand[20].y)],
+            ];
+        }) ?? []),
+    );
 
-    update() {
-        const videoColor = this.buffer.getColor(this.xBuffer, this.yBuffer);
-        const b = brightness(videoColor);
-        this.radius = map(b, 0, 70, this.maxRadius, 0.5);
-        this.brightness = map(b, 0, 100, 100, 50);
-    }
-
-    show() {
-        noStroke();
-        fill(this.hue, this.saturation, this.brightness);
-        ellipse(this.x, this.y, this.radius, this.radius);
+    for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].collide(lines);
     }
 }
 
-class VideoBuffer {
-    constructor(width, height) {
-        this.width = width;
-        this.height = height;
-        this.capture = createCapture(VIDEO);
-        this.capture.size(this.width, this.height);
-        this.buffer = createGraphics(this.width, this.height);
-        this.buffer.pixelDensity(1);
-    }
+function drawHand() {
+    fill(0);
+    noStroke();
 
-    getBuffer() {
-        return this.buffer;
-    }
+    if (handsfree.data.hands) {
+        if (handsfree.data.hands.multiHandLandmarks) {
+            const landmarks = handsfree.data.hands.multiHandLandmarks;
+            const nHands = landmarks.length;
 
-    update() {
-        this.copyWebcamToBuffer();
-        this.buffer.loadPixels();
-    }
+            for (let h = 0; h < nHands; h++) {
+                fill(h * 255, 255, 255);
+                for (let i = 0; i <= 20; i++) {
+                    let px = landmarks[h][i].x;
+                    let py = landmarks[h][i].y;
 
-    getColor(x, y) {
-        x = int(x);
-        y = int(y);
-        const index = 4 * (x + y * this.width);
-        return this.buffer.color(
-            this.buffer.pixels[index],
-            this.buffer.pixels[index + 1],
-            this.buffer.pixels[index + 2],
-            this.buffer.pixels[index + 3],
-        );
+                    px = map(px, 0, 1, width, 0);
+                    py = map(py, 0, 1, 0, height);
+                    circle(px, py, 10);
+                }
+            }
+        }
     }
+}
 
-    copyWebcamToBuffer() {
-        this.buffer.push();
-        this.buffer.translate(this.width, 0);
-        this.buffer.scale(-1.0, 1.0);
-        this.buffer.image(this.capture, 0, 0);
-        this.buffer.pop();
-    }
+function draw() {
+    update();
+    background(255);
+    particles?.forEach((particle) => particle.draw());
+
+    lines?.forEach((item) => {
+        stroke(0);
+        strokeWeight(2);
+        line(item[0], item[1], item[2], item[3]);
+    });
+    // drawHand();
 }
