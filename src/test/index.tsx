@@ -150,6 +150,7 @@ const TestPage = () => {
                 autoPlay
                 loop
                 muted
+                playsInline
                 style={{
                     position: "fixed",
                     top: 0,
