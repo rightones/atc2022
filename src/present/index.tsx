@@ -1,14 +1,29 @@
 import Page from "components/Page/Page";
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import Camera from "react-html5-camera-photo";
 import { animated, config, useTransition } from "react-spring";
 import { io } from "socket.io-client";
 import fscreen from "fscreen";
+import styled from "styled-components";
+
+const FullScreenContainer = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    position: relative;
+
+    #container-circles {
+        display: none;
+    }
+`;
 
 interface FullScreenPresentProps {
     src?: string;
     state: boolean;
     videoMode?: "normal" | "loop";
-    contentMode: "video" | "p5js";
+    contentMode: "video" | "p5js" | "camera";
 }
 
 function FullScreenPresent({ src, state, videoMode, contentMode }: FullScreenPresentProps) {
@@ -36,17 +51,8 @@ function FullScreenPresent({ src, state, videoMode, contentMode }: FullScreenPre
     if (contentMode === "video" && !src) return null;
 
     return (
-        <div
-            style={{
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                justifyContent: "stretch",
-                alignItems: "stretch",
-                position: "relative",
-            }}
-        >
-            {contentMode === "p5js" ? (
+        <FullScreenContainer>
+            {contentMode === "p5js" && (
                 <div
                     style={{ margin: "auto", position: "relative", width: "100%", height: "100%", overflow: "hidden" }}
                     dangerouslySetInnerHTML={{
@@ -71,11 +77,13 @@ allow="camera; microphone"
                                 />`,
                     }}
                 />
-            ) : (
+            )}
+            {contentMode === "video" && (
                 <video ref={videoRef} autoPlay={videoMode === "loop"} loop={videoMode === "loop"}>
                     {src && <source src={src} />}
                 </video>
             )}
+            {contentMode === "camera" && <Camera isFullscreen />}
             {transitions(
                 ({ opacity }, item) =>
                     item && (
@@ -98,7 +106,7 @@ allow="camera; microphone"
                         </animated.div>
                     ),
             )}
-        </div>
+        </FullScreenContainer>
     );
 }
 
@@ -107,7 +115,7 @@ function ControlPage() {
     const [url, setUrl] = useState("");
     const [room, setRoom] = useState("solid");
     const [state, setState] = useState(false);
-    const [contentMode, setContentMode] = useState<"video" | "p5js">("video");
+    const [contentMode, setContentMode] = useState<"video" | "p5js" | "camera">("video");
     const [videoSrc, setVideoSrc] = useState<string | undefined>("/solid.mp4");
     const [videoMode, setVideoMode] = useState<"normal" | "loop">("normal");
 
@@ -149,7 +157,15 @@ function ControlPage() {
         socket.on("on", (message) => {
             if (message === room) {
                 setState(true);
+                if (room === "liquid") setContentMode("video");
                 videoRef.current?.play();
+            } else if (room === "liquid") {
+                if (message === "gas") {
+                    setContentMode("camera");
+                    setState(true);
+                } else {
+                    setState(false);
+                }
             }
         });
 
