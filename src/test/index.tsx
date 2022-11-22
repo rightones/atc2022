@@ -49,6 +49,15 @@ const Container = styled.div`
     word-wrap: break-word;
     white-space: pre-wrap;
 
+    & > div {
+        width: 100%;
+        max-width: 480px;
+        margin: 0 auto;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
     video {
         pointer-events: none;
     }
@@ -167,7 +176,7 @@ const TestPage = () => {
                 <source src="/background3.mov" />
             </video>
             {state ? (
-                <>
+                <div>
                     <div className="question">
                         <h1>Q{num + 1}.</h1>
                         <h2>{data[num].title}</h2>
@@ -191,9 +200,9 @@ const TestPage = () => {
                     <button className="highlight" disabled={selectState === null} onClick={handleNext}>
                         다음
                     </button>
-                </>
+                </div>
             ) : (
-                <>
+                <div>
                     <h1>
                         여러분들의 상은
                         <br />
@@ -207,13 +216,13 @@ const TestPage = () => {
                     <div style={{ flexGrow: 1 }} />
                     {searchParams.get("result") && (
                         <button onClick={() => navigate("/test/result")} style={{ marginBottom: "12px" }}>
-                            유형 결과 보기
+                            유형 결과 다시 보기
                         </button>
                     )}
                     <button className="highlight" onClick={() => setState(true)}>
                         시작
                     </button>
-                </>
+                </div>
             )}
         </Container>
     );

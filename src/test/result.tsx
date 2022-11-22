@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { HiChevronDoubleDown } from "react-icons/hi2";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
@@ -117,8 +118,6 @@ const Container = styled.div`
     }
 
     button {
-        background-color: white;
-        color: black;
         border: none;
         height: 48px;
         width: 100%;
@@ -129,6 +128,16 @@ const Container = styled.div`
 
         background-color: rgba(255, 255, 255, 0.1);
         color: white;
+
+        &.active {
+            background-color: white;
+            color: black;
+        }
+
+        &.hidden {
+            background-color: black;
+            color: #fff6;
+        }
     }
 `;
 
@@ -136,6 +145,10 @@ const TestResultPage = () => {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const type = searchParams.get("type") as ResultKey | null;
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [searchParams]);
 
     return (
         <Container>
@@ -219,17 +232,23 @@ const TestResultPage = () => {
                         밖으로 나와서 단말기와 헤드폰을 반납해주세요.
                     </p>
                 )}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", margin: "32px 0" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", margin: "32px auto" }}>
                     {Object.keys(data).map((key) => (
                         <button
                             onClick={() =>
                                 navigate(`/test/result?type=${key}&event=${searchParams.get("event") ?? ""}`)
                             }
+                            className={type === key ? "active" : ""}
                         >
                             {key}
                         </button>
                     ))}
                 </div>
+                {searchParams.get("event") && (
+                    <button className="hidden" onClick={() => navigate(`/control`)} style={{ marginTop: "40px" }}>
+                        다시 시작(관리용)
+                    </button>
+                )}
             </footer>
         </Container>
     );

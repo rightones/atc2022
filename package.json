@@ -26,6 +26,7 @@
     "react-script-tag": "^1.1.2",
     "react-scripts": "5.0.1",
     "react-spring": "^9.5.5",
+    "react-webcam": "^7.0.1",
     "service-worker": "^0.0.0",
     "socket.io": "^4.5.2",
     "socket.io-client": "^4.5.2",
@@ -36,7 +37,7 @@
   },
   "scripts": {
     "server": "node server.js",
-    "start": "sudo SSL_CRT_FILE=./.cert/cert.pem SSL_KEY_FILE=./.cert/key.pem HTTPS=true PORT=443 ESLINT_NO_DEV_ERRORS='true' react-scripts start",
+    "start": "sudo SSL_CRT_FILE=./.cert/172.20.10.2/cert.pem SSL_KEY_FILE=./.cert/172.20.10.2/key.pem HTTPS=true PORT=443 ESLINT_NO_DEV_ERRORS='true' react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

@@ -2,6 +2,7 @@ import Page from "components/Page/Page";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Camera from "react-html5-camera-photo";
 import { animated, config, useTransition } from "react-spring";
+import Webcam from "react-webcam";
 import { io } from "socket.io-client";
 import fscreen from "fscreen";
 import styled from "styled-components";
@@ -83,7 +84,7 @@ allow="camera; microphone"
                     {src && <source src={src} />}
                 </video>
             )}
-            {contentMode === "camera" && <Camera isFullscreen />}
+            {contentMode === "camera" && <Webcam style={{ minWidth: "100%" }} />}
             {transitions(
                 ({ opacity }, item) =>
                     item && (
@@ -163,16 +164,19 @@ function ControlPage() {
                 if (message === "gas") {
                     setContentMode("camera");
                     setState(true);
-                } else {
-                    setState(false);
                 }
             }
         });
 
-        socket.on("message", (message) => {
+        socket.on("off", (message) => {
             if (message === room) {
                 setState(false);
                 videoRef.current?.pause();
+            } else if (room === "liquid") {
+                if (message === "gas") {
+                    setContentMode("video");
+                    setState(false);
+                }
             }
         });
     }, [socket]);

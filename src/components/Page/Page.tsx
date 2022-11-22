@@ -44,6 +44,10 @@ const Container = styled.div`
         margin: 0;
         font-size: 16px;
     }
+    p {
+        margin: 4px 0;
+        line-height: 1.4;
+    }
 
     & > div {
         display: flex;
@@ -78,7 +82,7 @@ const Container = styled.div`
     button {
         height: 48px;
         width: 100%;
-        border-radius: 8px;
+        border-radius: 12px;
         background-color: rgba(255, 255, 255, 0.1);
         border: none;
         font-size: 16px;

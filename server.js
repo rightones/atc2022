@@ -40,8 +40,8 @@ app.use(cors());
 const fs = require("fs");
 
 const options = {
-    key: fs.readFileSync("./.cert/key.pem"),
-    cert: fs.readFileSync("./.cert/cert.pem"),
+    key: fs.readFileSync("./.cert/172.20.10.2/key.pem"),
+    cert: fs.readFileSync("./.cert/172.20.10.2/cert.pem"),
     requestCert: false,
     rejectUnauthorized: false,
 };
